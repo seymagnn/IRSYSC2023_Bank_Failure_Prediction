@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Bank Failure Prediction Models Addressing Imbalanced Data and Out-of-Time Performance</title>
+
+
+
+
+
+
+
+<!--
+Font-awesome icons ie github or twitter
+-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/brands.css" integrity="sha384-n9+6/aSqa9lBidZMRCQHTHKJscPq6NW4pCQBiMmHdUCvPN8ZOg2zJJTkC7WIezWv" crossorigin="anonymous">
+
+<!--
+Google fonts api stuff
+-->
+<link href='https://fonts.googleapis.com/css?family=Special Elite' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Rasa' rel='stylesheet'>
+
+<!--
+Here are the required style attributes for css to make this poster work :)
+-->
+<style>
+@page {
+size: 36in 48in;
+margin: 0;
+padding: 0;
+}
+body {
+margin: 0px;
+padding: 0px;
+width: 36in;
+height: 48in;
+text-align: justify;
+font-size: 45px;
+line-height: 1.05;
+}
+/* RMarkdown Class Styles */
+/* center align leaflet map,
+from https://stackoverflow.com/questions/52112119/center-leaflet-in-a-rmarkdown-document */
+.html-widget {
+margin: auto;
+position: sticky;
+margin-top: 2cm;
+margin-bottom: 2cm;
+}
+.leaflet.html-widget.html-widget-static-bound.leaflet-container.leaflet-touch.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom {
+position: sticky;
+width: 100%;
+}
+pre.sourceCode.r, pre.sourceCode.python {
+background-color: #ffffff20;
+border: solid #221132 1mm;
+border-radius: 0.5em;
+padding: 4mm;
+margin: auto;
+margin-top: 1em;
+margin-bottom: 1em;
+/* align-items: center; */
+}
+div.sourceCode {
+background-color: transparent;
+width: 85%;
+margin-left: auto;
+margin-right: auto;
+}
+code.sourceCode.r, code.sourceCode.python {
+background-color: transparent;
+font-size: 20pt;
+border-radius: 2mm;
+}
+code {
+font-size: 25pt;
+font-family: monospace;
+background-color: #22113224;
+color: #221132;
+padding: 1.2mm;
+line-height: 1;
+border-radius: 2mm;
+}
+caption {
+margin-bottom: 10px;
+font-size: 20pt;
+font-style: italic;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #22113220;
+}
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+  border-spacing: 0;
+  font-size: 40%;
+  border-style: none;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-right: 1em;
+  padding-left: 1em;
+  line-height: 1em;
+}
+table {
+  margin: auto;
+}
+th {
+  padding-left: 5mm;
+  padding-right: 5mm;
+}
+.caption {
+font-size: 20pt;
+font-style: italic;
+padding-top: 0;
+}
+.references {
+font-size: 20px;
+line-height: 90%;
+}
+/* Create three unequal columns that floats next to each other */
+.column {
+float: left;
+padding: 0px;
+}
+.outer {
+width: 36in;
+height: calc(48in *  (1 - 0.1 - 0.1 - 0.01) );
+-webkit-column-count: 3; /* Chrome, Safari, Opera */
+-moz-column-count: 3; /* Firefox */
+column-count: 3;
+-webkit-column-fill: auto;
+-moz-column-fill: auto;
+column-fill: auto;
+column-gap: 0;
+padding-left: 0cm;
+padding-right: 0cm;
+/* -webkit-column-rule-width: 50%;
+-moz-column-rule-width: 50%;
+column-rule-width: 50%; */
+-webkit-column-rule-style: none;
+-moz-column-rule-style: none;
+column-rule-style: none;
+-webkit-column-rule-color: black;
+-moz-column-rule-color: black;
+column-rule-color: black;
+background-color: #ffffff;
+font-family: Rasa;
+margin-top: calc(48in *  0.1 );
+padding-top: 1em;
+padding-bottom: 1em;
+}
+span.citation {
+  color: #221132;
+  font-weight: bold;
+}
+a {
+text-decoration: none;
+color: #221132;
+}
+#title {
+font-size: 125pt;
+text-align: left;
+margin: 0;
+line-height: 98%;
+border-bottom: 0;
+font-weight: normal;
+background: 0;
+}
+#author {
+color:#221132;
+margin: 0;
+line-height: 85%;
+font-size: 1.17em;
+}
+#affiliation {
+padding-top: 0.1em;
+color: ;
+font-style: italic;
+font-size: 25px;
+margin: 0;
+}
+sup {
+color: #cc0000;
+}
+.affiliation sup {
+font-size: 20px;
+}
+.author {
+text-align: left;
+}
+.author sup {
+font-size: 30px;
+}
+.author_extra {
+color: #221132;
+margin: 0;
+line-height: 85%;
+font-size: 35px;
+text-align: left;
+}
+.outer h1, h2, h3, h4, h5, h6 {
+text-align: center;
+margin: 0;
+font-weight: bold;
+}
+.section h1 {
+  text-align:center;
+  padding-bottom:5px;
+  background:
+    linear-gradient(
+      to left,
+      #ffffff 1%,
+      #ffffff 20%,
+      #22113275 33%,
+      #221132 50%,
+      #22113275 66%,
+      #ffffff 80%,
+      #ffffff 99%
+    )
+    left
+    bottom
+    #ffffff
+    no-repeat;
+  background-size:100% 5px ;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+.outer h2 {
+text-align: center;
+}
+.outer p, .level2 {
+color: #000000;
+}
+.outer ol {
+padding-left: 8%;
+padding-right: 8%;
+text-align: left;
+}
+.main {
+width: 36in;
+height: calc(48in * 0.1);
+position: absolute;
+background-color: #221132;
+color: #ffffff90;
+font-family: Special Elite;
+background-image: linear-gradient(#221132 50%,#221132);
+}
+.main strong {
+color: #ffffff;
+}
+.main strong > sup {
+color: #ffffff;
+}
+.main sup {
+color: #ffffff90;
+}
+#main-img-left {
+width: 10%;
+left: 0.5in;
+bottom: 0.2in;
+position: absolute;
+}
+#main-img-center {
+width: 10%;
+left: calc(36in * 0.45);
+bottom: 0.5in;
+position: absolute;
+}
+#main-img-right {
+width: 10%;
+right: 0.5in;
+bottom: 0.2in;
+position: absolute;
+}
+.main p {
+font-size: 90pt;
+font-family: Special Elite;
+text-align: center;
+margin: 0;
+position: absolute;
+top: 50%;
+-ms-transform: translateY(-50%);
+transform: translateY(-50%);
+margin-left: 1em;
+}
+.fab {
+color: #00000060;
+font-size: 25px;
+}
+.twitter, i {
+color: #00000060;
+font-size: 35px;
+text-decoration: none;
+}
+a.email {
+text-decoration: none;
+color: #00000060;
+font-size: 35px;
+}
+.envelope {
+color: #00000060;
+font-size: 5px;
+text-decoration: none;
+}
+.globe {
+color: #00000060;
+font-size: 5px;
+text-decoration: none;
+}
+.globetext {
+color: #00000060;
+font-size: 35px;
+text-decoration: none;
+}
+.poster_wrap {
+width: 36in;
+height: 48in;
+padding: 0cm;
+}
+.main_bottom {
+width: 36in;
+height: calc(48in * 0.1);
+margin-top: calc(48in * (1 - 0.1));
+position: absolute;
+background-color: #221132;
+background-image: linear-gradient(#221132 10%, #221132);
+}
+.section {
+  padding-left: 10mm;
+  padding-right: 10mm;
+}
+span > #tab:mytable {
+  font-weight: bold;
+}
+.orcid img {
+  width: 3%;
+}
+.emphasis {
+  background-color: #008080;
+  color: #ffffff;
+  border: solid #0b2045 3mm;
+  margin: 1em;
+  padding-left: 0;
+  padding-right: 0;
+}
+.emphasis h1 {
+  font-weight: bold;
+  background: none;
+  background-color: #0b2045;
+  padding-bottom: 5mm;
+  padding-top: 1mm;
+  margin-top: -1mm;
+  margin-right: -1mm;
+  margin-left: -1mm;
+}
+.emphasis blockquote {
+  border: 0;
+}
+.emphasis ol {
+  padding: 0;
+  padding-left: 8%;
+  font-size: 100%;
+  font-weight: bold;
+}
+.emphasis p {
+  color: #ffffff;
+}
+</style>
+</head>
+<body>
+
+
+<div class="poster_wrap">
+
+<div class="column outer">
+<div class="section">
+<h1 id="title"><strong>Bank Failure Prediction Models Addressing Imbalanced Data and Out-of-Time Performance</strong></h1><br>
+<h3 id="author" class="author">
+
+Seyma GUNONU<sup> </sup><br>
+<a class="twitter" href="https://mobile.twitter.com/seyma_gunonu"><i class="fab fa-twitter"></i>&nbsp;&nbsp;@seyma_gunonu</a><br>
+
+<a class='envelope'><i class="fas fa-envelope"></i></a> <a href="mailto:seymagunonu@gmail.com" class="email">seymagunonu@gmail.com</a> <br>
+ Gizem ALTUN<sup> </sup><br>
+<a class="twitter" href="https://mobile.twitter.com/GizemAltn99"><i class="fab fa-twitter"></i>&nbsp;&nbsp;@GizemAltn99</a><br>
+
+<a class='envelope'><i class="fas fa-envelope"></i></a> <a href="mailto:gizemaltn99@gmail.com" class="email">gizemaltn99@gmail.com</a> <br>
+ Mustafa CAVUS<sup> </sup><br>
+<a class="twitter" href="https://mobile.twitter.com/mustafa__cavus"><i class="fab fa-twitter"></i>&nbsp;&nbsp;@mustafa__cavus</a><br>
+
+<a class='envelope'><i class="fas fa-envelope"></i></a> <a href="mailto:mustafacavus@eskisehir.edu.tr" class="email">mustafacavus@eskisehir.edu.tr</a> <br>
+</h3>
+
+<h5 id="author_extra", class="author_extra">
+  </h5>
+
+
+<p id="affiliation" class="affiliation">
+<sup></sup> Department of Statistics, Eskisehir Technical University
+</p>
+</div>
+
+<style>
+#title {
+  font-size: 110pt;
+}
+
+#main-img-left {
+  width: 20%;
+  left: 1in;
+  bottom: 1.0in;
+}
+
+.main {
+  background-color: #221132;
+  background-image: linear-gradient(#221132 50%,#FFFFFF);
+}
+
+.main_bottom {
+  background-color: #221132;
+  background-image: linear-gradient(#FFFFFF 5%, #221132);
+}
+
+#author {
+ font-size: 0.9em;
+}
+
+
+#main-img-right {
+  width: 17%;
+  right: 1in;
+  bottom: 1.2in;
+}
+
+#references {
+  font-size: 28px;
+  line-height: 0.9;
+}
+
+</style>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Banks are crucial to the financial system and must operate effectively. Recently, bank failure models have been used to predict the likelihood of bank failures by analyzing relevant metrics. In addition to ensuring high out-of-sample performance, it is important to address the poor out-of-time performance of bank failure prediction models to maintain their utility <code>(Du Jardin &amp; Séverin, 2011; Manthoulis et al., 2020)</code>. When using tabular data sets, deep learning models are used more than tree-based models <code>(Carmona et al., 2019); Petropoulos et al., 2020); Grinsztajn et al., 2022)</code>. As a difference, it is being examined what kind of results such data sets may encounter with Decision Trees, Random Forests <code>(Breiman, 2001)</code>, and Extra Trees <code>(Geurts et al., 2006)</code> models.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:figures"></span>
+<img src="failed_banks_by_years.png" alt="Failed Banks in the U.S. by years" width="100%" />
+<p class="caption">
+Figure 1: Failed Banks in the U.S. by years
+</p>
+</div>
+<p>The data has collected from the FDIC database using the <strong><code>{fdicdata}</code></strong> package in R <code>(Dar &amp; Pillmore, 2023)</code>. It covers information about whether banks were active or closed within 15-year period from 2008 to 2023. When determining the time ranges in the data set, <strong>in-sample</strong> and <strong>out-of-sample</strong> were obtained between <strong>2008-2014</strong>, while models were builded using the <strong>out-of-time</strong> set between <strong>2014-2023</strong>. Figure <a href="#fig:figures">1</a> includes the banks that failed in the U.S. during these time ranges. CAMELS indicators (Capital, Asset Quality, Management Adequacy, Earnings, Liquidity, and Sensitivity to Market Risk) in the first as in <code>(Gogas et al. 2018)</code> and second variable groups as in <code>(Petropoulos et al. 2020)</code> were used. In the third variable group, different indicators that may be important were added. The variables in the data set are listed in detail in Figure <a href="#fig:variable">2</a> .</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:variable"></span>
+<img src="variable_groups.png" alt="Details of variables used in the data set" width="75%" />
+<p class="caption">
+Figure 2: Details of variables used in the data set
+</p>
+</div>
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<p>Three different models were employed in this study because they provides varying variance of predictions. When comparing the prediction variances of these three methods, it becomes apparent that the <strong>Decision Trees</strong> yields high-variance predictions, the <strong>Random Forests</strong> provides predictions with moderate variance, and the <strong>Extra Trees</strong> generate predictions with low variance <code>(Gogas et al., 2018)</code>. The structures of Decision trees, Random forests and Extra trees models are shown in Figures <a href="#fig:rf">3</a>, and <a href="#fig:ext">4</a>. Random Forests lies in aggregating predictions generated by multiple decision trees. Breiman improved upon the overfitting-prone CART method by introducing Random Forests, an extension of bagging trees. It differs by using feature subsets for each tree, reducing correlation. This added randomness enhances stability and generalization, making Random Forests valuable across applications <code>(Breiman, 2000)</code>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:rf"></span>
+<img src="random_forests_structure.png" alt="Random Forests Structure" width="100%" />
+<p class="caption">
+Figure 3: Random Forests Structure
+</p>
+</div>
+<p>Its two primary distinctions from Random Forests are that it splits nodes by randomly selecting cut-points and that it grows the trees using the entire learning sample <code>(Geurts et al., 2006)</code>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ext"></span>
+<img src="extra_trees_structure.png" alt="Extra Trees Structure" width="100%" />
+<p class="caption">
+Figure 4: Extra Trees Structure
+</p>
+</div>
+<p>To address imbalanced data, resampling techniques like <strong>undersampling</strong> reduce majority class samples, <strong>oversampling</strong> increases minority class samples, and <strong>SMOTE</strong> creates synthetic minority samples for better representation in Figure <a href="#fig:resampling">5</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:resampling"></span>
+<img src="resampling_methods.png" alt="Resampling Techniques’ Structures" width="45%" />
+<p class="caption">
+Figure 5: Resampling Techniques’ Structures
+</p>
+</div>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<p>Three different variable groups were considered, and three different models were applied. The dataset exhibited an imbalance between the classes. So, imbalance in the data was addressed using various resampling methods. <strong>Accuracy</strong> and <strong>F1 scores</strong> were calculated for each variable groups to assess model performance. The results of out-of-sample showed that generally the weighted-based which is cost-sensitive method had the highest accuracy for all variable groups, while SMOTE had the lowest accuracy. Accuracy values were closer between variable groups in the out-of-time strategy, and some results were the same in random forests and extra trees. Variable groups with under-sampling had lower F1 values in the out-of-time strategy. As a result, <strong>the choice of resampling method’s effectiveness varied depending on the variable group and model.</strong> <strong>The out-of-time strategy is important to assess how models perform with changing data over time.</strong></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-3"></span>
+<img src="out_of_sample_results.png" alt="Accuracy and F1 values for out-of-sample with three different models for each variable group" width="100%" />
+<p class="caption">
+Figure 6: Accuracy and F1 values for out-of-sample with three different models for each variable group
+</p>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-4"></span>
+<img src="out_of_time_results.png" alt="Accuracy and F1 values for out-of-time with three different models for each variable group" width="100%" />
+<p class="caption">
+Figure 7: Accuracy and F1 values for out-of-time with three different models for each variable group
+</p>
+</div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>In study focuses on using Decision Trees, Random Forests, and Extra Trees to make bank failure predictions. What makes this study apart is the usage of a <strong>1-year lag (t-1) period</strong> in the dataset. When examining the overall results of the models, <strong>it was observed that Random Forests and Extra Trees yielded similar and high-quality results, making them the most effective models for predicting bank failures.</strong></p>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<p>Breiman, L. (2000). Some infinity theory for predictor ensembles. Technical Report 579, Statistics Dept. UCB.</p>
+<p>Breiman, L. (2001). Random forests. Machine learning, 45, 5-32.</p>
+<p>Carmona, P., Climent, F., &amp; Momparler, A. (2019). Predicting failure in the US banking sector: An extreme gradient boosting approach. Int. Rev. Econ. Finance, 61, 304-323.</p>
+<p>Dar, U., &amp; Pillmore, B. (2023). fdicdata: Accessing FDIC Bank Data. R package version 0.1.0.</p>
+<p>Du Jardin, P., &amp; Séverin, E. (2011). Predicting corporate bankruptcy using a self-organizing map: An empirical study to improve the forecasting horizon of a financial failure model. Decis Support Syst, 51(3), 701-711.</p>
+<p>Geurts, P., Ernst, D., &amp; Wehenkel, L. (2006). Extremely randomized trees. Machine learning, 63, 3-42.</p>
+<p>Gogas, P., Papadimitriou, T., &amp; Agrapetidou, A. (2018). Forecasting bank failures and stress testing: A machine learning approach. Int. J. Forecast., 34(3), 440-455.</p>
+<p>Grinsztajn, L., Oyallon, E., &amp; Varoquaux, G. (2022). Why do tree-based models still outperform deep learning on typical tabular data?. Adv. Neural Inf. Process, 35, 507-520.</p>
+<p>Manthoulis, G., Doumpos, M., Zopounidis, C., &amp; Galariotis, E. (2020). An ordinal classification framework for bank failure prediction: Methodology and empirical evidence for US banks. Eur. J. Oper. Res., 282(2), 786-801.</p>
+<p>Petropoulos, A., Siakoulis, V., Stavroulakis, E., &amp; Vlachogiannakis, N. E. (2020). Predicting bank insolvencies using machine learning techniques. Int. J. Forecast., 36(3), 1092-1113.</p>
+</div>
+
+</div>
+<div class="main">
+<p><strong>Use weighting methods instead of SMOTE</strong> for higher out-of-time performance in <strong>imbalanced</strong> bank failure prediction models!</p>
+</div>
+<div class="main_bottom">
+<img id="main-img-left" src=estu_logo.png>
+<img id="main-img-center" src=qrcode.png>
+<img id="main-img-right" src=irsysc2023_logo.png>
+</div>
+</div>
+
+
+
+</body>
+</html>
