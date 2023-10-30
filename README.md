@@ -12,7 +12,7 @@ Breiman, L. (2001). Random forests. Machine learning, 45, 5-32.
 
 Carmona, P., Climent, F., & Momparler, A. (2019). Predicting failure in the US banking sector: An extreme gradient boosting approach. Int. Rev. Econ. Finance, 61, 304-323.
 
-Dar, U., & Pillmore, B. (2023). fdicdata: Accessing FDIC Bank Data. R package version 0.1.0.(https://github.com/visbanking/fdicdata)
+Dar, U., & Pillmore, B. (2023). fdicdata: Accessing FDIC Bank Data. R package version 0.1.0.[Link](https://github.com/visbanking/fdicdata)
 
 Du Jardin, P., & Séverin, E. (2011). Predicting corporate bankruptcy using a self-organizing map: An empirical study to improve the forecasting horizon of a financial failure model. Decis Support Syst, 51(3), 701-711.
 
