@@ -4,7 +4,7 @@
 
 
 
-# Referances
+# References
 
 Breiman, L. (2000). Some infinity theory for predictor ensembles. Technical Report 579, Statistics Dept. UCB.
 
