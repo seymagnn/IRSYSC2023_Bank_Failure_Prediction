@@ -4,7 +4,7 @@
 
 
 # Code
-You can see how the data was captured with {fdicdata} package or how data manipulations were made in the data set,![click on this page](R).
+You can see how the data was ![captured](R/items) with {fdicdata} package or how data manipulations were made in the data set,![click on this page](R).
 
 # References
 
