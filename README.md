@@ -1,4 +1,18 @@
-# Bank Failure Prediction Models Addressing imbalanced Data and Out-of-Time Performance
+# Bank Failure Prediction Models Addressing Imbalanced Data and Out-of-Time Performance
+
+This repository consists of the supplemental materials of a conference paper.
+
+If you use the paper or codes, please cite it:
+
+```
+@INPROCEEDINGS{,
+  author={Gunonu, Seyma and Altun, Gizem and Cavus, Mustafa},
+  booktitle={Proceedings Book of the 7th International Researchers, Statisticians and Young Statisticians Congress}, 
+  title={Bank failure prediction models addressing imbalanced data and out-of-time performance}, 
+  year={2023},
+  pages={185-199},
+  ISBN={978-625-8368-61-1}}
+```
 
 ![](poster/poster_page.jpg)
 
